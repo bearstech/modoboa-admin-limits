@@ -15,10 +15,10 @@ PERMISSIONS = {
     "Resellers": (
         CORE_PERMS.get("DomainAdmins") +
         ADMIN_PERMS.get("DomainAdmins") +
-        [["admin", "domain", "view_domains"],
-         ["admin", "domain", "add_domain"],
-         ["admin", "domain", "change_domain"],
-         ["admin", "domain", "delete_domain"]]
+        [["modoboa_admin", "domain", "view_domains"],
+         ["modoboa_admin", "domain", "add_domain"],
+         ["modoboa_admin", "domain", "change_domain"],
+         ["modoboa_admin", "domain", "delete_domain"]]
     )
 }
 
@@ -44,7 +44,7 @@ def display_pool_usage(user, target, currentpage):
         return []
     if currentpage == "identities":
         names = ["mailboxes_limit", "mailbox_aliases_limit"]
-        if user.has_perm("admin.add_domain"):
+        if user.has_perm("modoboa_admin.add_domain"):
             names += ["domain_admins_limit"]
     else:
         names = [
@@ -57,7 +57,10 @@ def display_pool_usage(user, target, currentpage):
     limits = user.limitspool.limit_set.filter(name__in=names, maxvalue__gt=0)
     if len(limits) == 0:
         return []
-    return [render_to_string("modoboa_admin_limits/poolusage.html", dict(limits=limits))]
+    return [
+        render_to_string("modoboa_admin_limits/poolusage.html",
+                         dict(limits=limits))
+    ]
 
 
 @events.observe("ExtraAccountForm")
