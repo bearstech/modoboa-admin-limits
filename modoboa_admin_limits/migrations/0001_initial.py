@@ -21,6 +21,7 @@ class Migration(migrations.Migration):
                 ('maxvalue', models.IntegerField(default=-2)),
             ],
             options={
+                'db_table': 'limits_limit',
             },
             bases=(models.Model,),
         ),
@@ -31,6 +32,7 @@ class Migration(migrations.Migration):
                 ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
             options={
+                'db_table': 'limits_limitspool',
             },
             bases=(models.Model,),
         ),
