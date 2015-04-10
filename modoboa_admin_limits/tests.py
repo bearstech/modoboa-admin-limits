@@ -29,12 +29,12 @@ class PermissionsTestCase(ModoTestCase):
             password1="toto", password2="toto", role="Resellers",
             is_active=True, email="reseller@test.com", stepid='step2'
         )
-        self.ajax_post(reverse("admin:account_add"), values)
+        self.ajax_post(reverse("modoboa_admin:account_add"), values)
         account = User.objects.get(username="reseller@test.com")
         self.clt.logout()
         self.clt.login(username="admin@test.com", password="toto")
         resp = self.ajax_post(
-            reverse("admin:account_delete", args=[account.id]),
+            reverse("modoboa_admin:account_delete", args=[account.id]),
             {}, status=403
         )
         self.assertEqual(resp, "Permission denied")
@@ -49,8 +49,12 @@ class ResourceTestCase(ModoTestCase):
         provided by 'postfix_relay_domains' are properly received.
         """
         super(ResourceTestCase, self).setUp()
+        #exts_pool.load_extension("modoboa_admin_limits")
         for tpl in LimitTemplates().templates:
-            parameters.save_admin('DEFLT_%s' % tpl[0].upper(), 2, app='limits')
+            parameters.save_admin(
+                "DEFLT_{0}".format(tpl[0].upper()), 2,
+                app="modoboa_admin_limits"
+            )
         populate_database()
 
     def _create_account(self, username, role='SimpleUsers', status=200):
@@ -61,7 +65,7 @@ class ResourceTestCase(ModoTestCase):
             is_active=True, email=username, stepid='step2',
         )
         return self.ajax_post(
-            reverse("admin:account_add"), values, status
+            reverse("modoboa_admin:account_add"), values, status
         )
 
     def _create_alias(self, email, rcpt='user@test.com', status=200):
@@ -69,7 +73,7 @@ class ResourceTestCase(ModoTestCase):
             email=email, recipients=rcpt, enabled=True
         )
         return self.ajax_post(
-            reverse("admin:alias_add"), values, status
+            reverse("modoboa_admin:alias_add"), values, status
         )
 
     def _create_domain(self, name, status=200, withtpl=False):
@@ -82,7 +86,7 @@ class ResourceTestCase(ModoTestCase):
             values['dom_admin_username'] = 'admin'
             values['create_aliases'] = 'yes'
         return self.ajax_post(
-            reverse("admin:domain_add"), values, status
+            reverse("modoboa_admin:domain_add"), values, status
         )
 
     def _domain_alias_operation(self, optype, domain, name, status=200):
@@ -99,7 +103,7 @@ class ResourceTestCase(ModoTestCase):
             fname = 'aliases' if not cpt else 'aliases_%d' % cpt
             values[fname] = alias
         self.ajax_post(
-            reverse("admin:domain_change", args=[dom.id]),
+            reverse("modoboa_admin:domain_change", args=[dom.id]),
             values, status
         )
 
@@ -127,7 +131,7 @@ class DomainAdminTestCase(ResourceTestCase):
         resp = self._create_account('tester3@test.com', status=403)
         self._check_limit('mailboxes', 2, 2)
         self.ajax_post(
-            reverse('admin:account_delete',
+            reverse('modoboa_admin:account_delete',
                     args=[User.objects.get(username='tester2@test.com').id]),
             {}
         )
@@ -141,7 +145,7 @@ class DomainAdminTestCase(ResourceTestCase):
         resp = self._create_alias('alias3@test.com', status=403)
         self._check_limit('mailbox_aliases', 2, 2)
         self.ajax_post(
-            reverse('admin:alias_delete') + '?selection=%d'
+            reverse('modoboa_admin:alias_delete') + '?selection=%d'
             % Alias.objects.get(address='alias2', domain__name='test.com').id,
             {}
         )
@@ -155,7 +159,7 @@ class DomainAdminTestCase(ResourceTestCase):
             aliases="alias1@test.com", aliases_1="alias2@test.com"
         )
         self.ajax_post(
-            reverse("admin:account_change", args=[user.id]),
+            reverse("modoboa_admin:account_change", args=[user.id]),
             values
         )
         Alias.objects.get(address='alias1', domain__name='test.com')
@@ -180,7 +184,7 @@ class ResellerTestCase(ResourceTestCase):
         resp = self._create_domain('domain3.tld', 403)
         self._check_limit('domains', 2, 2)
         self.ajax_post(
-            reverse('admin:domain_delete',
+            reverse('modoboa_admin:domain_delete',
                     args=[Domain.objects.get(name='domain2.tld').id]),
             {}
         )
@@ -188,15 +192,15 @@ class ResellerTestCase(ResourceTestCase):
 
     def test_domain_aliases_limit(self):
         self._create_domain('pouet.com')
-        self._domain_alias_operation('add', 'pouet.com', 'domain_alias1.tld')
+        self._domain_alias_operation('add', 'pouet.com', 'domain-alias1.tld')
         self._check_limit('domain_aliases', 1, 2)
-        self._domain_alias_operation('add', 'pouet.com', 'domain_alias2.tld')
+        self._domain_alias_operation('add', 'pouet.com', 'domain-alias2.tld')
         self._check_limit('domain_aliases', 2, 2)
         resp = self._domain_alias_operation(
-            'add', 'pouet.com', 'domain_alias3.tld', 403
+            'add', 'pouet.com', 'domain-alias3.tld', 403
         )
         self._check_limit('domain_aliases', 2, 2)
-        self._domain_alias_operation('delete', 'pouet.com', 'domain_alias2.tld')
+        self._domain_alias_operation('delete', 'pouet.com', 'domain-alias2.tld')
         self._check_limit('domain_aliases', 1, 2)
 
     def test_domain_admins_limit(self):
@@ -225,7 +229,7 @@ class ResellerTestCase(ResourceTestCase):
             'email': user.email
         }
         resp = self.ajax_post(
-            reverse("admin:account_change", args=[user.id]),
+            reverse("modoboa_admin:account_change", args=[user.id]),
             values, status=400
         )
         self.assertEqual(
@@ -260,7 +264,7 @@ class ResellerTestCase(ResourceTestCase):
         self._create_domain('domain.tld', withtpl=True)
         dom = Domain.objects.get(name="domain.tld")
         self.ajax_post(
-            reverse("admin:domain_delete", args=[dom.id]),
+            reverse("modoboa_admin:domain_delete", args=[dom.id]),
             {}
         )
         self._check_limit('domains', 0, 2)
@@ -275,7 +279,7 @@ class ResellerTestCase(ResourceTestCase):
         self.clt.login(username='admin', password='password')
         self.ajax_get(
             "{0}?domid={1}&daid={2}".format(
-                reverse('admin:permission_remove'), dom.id, self.user.id
+                reverse('modoboa_admin:permission_remove'), dom.id, self.user.id
             ), {}
         )
         self._check_limit('domains', 0, 2)
@@ -295,7 +299,7 @@ class ResellerTestCase(ResourceTestCase):
             'mailboxes_limit': 1, 'mailbox_aliases_limit': 2
         }
         self.ajax_post(
-            reverse("admin:account_change", args=[user.id]),
+            reverse("modoboa_admin:account_change", args=[user.id]),
             values
         )
         self._check_limit('mailboxes', 1, 1)
@@ -304,7 +308,7 @@ class ResellerTestCase(ResourceTestCase):
         # Delete the admin -> resources should go back to the
         # reseller's pool
         self.ajax_post(
-            reverse("admin:account_delete", args=[user.id]),
+            reverse("modoboa_admin:account_delete", args=[user.id]),
             {}
         )
         self._check_limit('mailboxes', 0, 2)
@@ -321,7 +325,7 @@ class ResellerTestCase(ResourceTestCase):
             'mailboxes_limit': 1, 'mailbox_aliases_limit': 2
         }
         self.ajax_post(
-            reverse("admin:account_change", args=[user.id]),
+            reverse("modoboa_admin:account_change", args=[user.id]),
             values
         )
         dom.add_admin(user)
@@ -335,7 +339,7 @@ class ResellerTestCase(ResourceTestCase):
         # Delete the admin -> resources should go back to the
         # reseller's pool
         self.ajax_post(
-            reverse("admin:account_delete", args=[user.id]),
+            reverse("modoboa_admin:account_delete", args=[user.id]),
             {}
         )
         self._check_limit('mailboxes', 1, 2)
@@ -353,7 +357,7 @@ class ResellerTestCase(ResourceTestCase):
             'mailboxes_limit': 1, 'mailbox_aliases_limit': 2
         }
         self.ajax_post(
-            reverse("admin:account_change", args=[user.id]),
+            reverse("modoboa_admin:account_change", args=[user.id]),
             values
         )
         self._check_limit('mailboxes', 1, 1)
@@ -366,7 +370,7 @@ class ResellerTestCase(ResourceTestCase):
             'is_active': user.is_active, 'email': user.email,
         }
         self.ajax_post(
-            reverse("admin:account_change", args=[user.id]),
+            reverse("modoboa_admin:account_change", args=[user.id]),
             values
         )
         self._check_limit('mailboxes', 1, 2)
@@ -384,7 +388,7 @@ class ResellerTestCase(ResourceTestCase):
             'mailboxes_limit': 2, 'mailbox_aliases_limit': 3
         }
         resp = self.ajax_post(
-            reverse("admin:account_change", args=[user.id]),
+            reverse("modoboa_admin:account_change", args=[user.id]),
             values, 424
         )
         self.assertEqual(resp, 'Not enough resources')

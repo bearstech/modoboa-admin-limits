@@ -2,7 +2,6 @@
 
 from django.utils.translation import ugettext as _
 
-from modoboa.core import PERMISSIONS as CORE_PERMS
 from modoboa.lib import events
 
 from modoboa_admin.modo_extension import PERMISSIONS as ADMIN_PERMS
@@ -13,7 +12,6 @@ from .models import LimitTemplates
 
 PERMISSIONS = {
     "Resellers": (
-        CORE_PERMS.get("DomainAdmins") +
         ADMIN_PERMS.get("DomainAdmins") +
         [["modoboa_admin", "domain", "view_domains"],
          ["modoboa_admin", "domain", "add_domain"],
@@ -24,7 +22,8 @@ PERMISSIONS = {
 
 
 @events.observe("GetExtraRoles")
-def get_extra_roles(user):
+def get_extra_roles(user, account):
+    """Return additional roles."""
     if user.is_superuser:
         return [("Resellers", _("Reseller")), ]
     return []
