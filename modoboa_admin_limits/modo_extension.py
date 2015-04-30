@@ -21,7 +21,7 @@ EVENTS = [
 class Limits(ModoExtension):
     name = "modoboa_admin_limits"
     label = "Limits"
-    version = "1.0.0"
+    version = "1.0.1"
     description = ugettext_lazy(
         "Per administrator resources to limit the number of objects "
         "they can create"
