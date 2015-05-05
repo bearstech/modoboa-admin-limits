@@ -19,99 +19,122 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: app_settings.py:13
 msgid "Default limits"
 msgstr "Standard-Grenzwerte"
+
 #: app_settings.py:16 models.py:17
 msgid "Domain admins"
-msgstr "Domänen-Administratoren"
+msgstr "Domain-Administratoren"
+
 #: app_settings.py:19
 msgid "Maximum number of allowed domain administrators for a new administrator"
 msgstr ""
-"Maximale Anzahl Domänenadministratoren, die ein neuer Administrator "
+"Maximale Anzahl der Domain-Administratoren, die ein neuer Administrator "
 "erstellen darf"
+
 #: app_settings.py:25 models.py:21
 msgid "Domains"
-msgstr "Domänen"
+msgstr "Domains"
+
 #: app_settings.py:28
 msgid "Maximum number of allowed domains for a new administrator"
 msgstr "Maximale Anzahl Domains, die ein neuer Administrator erstellen darf"
+
 #: app_settings.py:32 models.py:24
 msgid "Domain aliases"
-msgstr "Domänen-Aliase"
+msgstr "Domain-Aliase"
+
 #: app_settings.py:35
 msgid "Maximum number of allowed domain aliases for a new administrator"
 msgstr ""
-"Maximale Anzahl Domain Aliase, die ein neuer Administrator erstellen darf"
+"Maximale Anzahl Domain-Aliase, die ein neuer Administrator erstellen darf"
+
 #: app_settings.py:39 models.py:28
 msgid "Mailboxes"
 msgstr "Mailboxen"
+
 #: app_settings.py:42
 msgid "Maximum number of allowed mailboxes for a new administrator"
 msgstr "Maximale Anzahl Mailboxen, die ein neuer Administrator erstellen darf"
+
 #: app_settings.py:46 models.py:30
 msgid "Mailbox aliases"
 msgstr "Mailboxen-Aliase"
+
 #: app_settings.py:49
 msgid "Maximum number of allowed aliases for a new administrator"
 msgstr "Maximale Anzahl Aliase, die ein neuer Administrator erstellen darf"
+
 #: forms.py:35 forms.py:42
 msgid "Invalid limit"
 msgstr "Ungültiger Grenzwert"
+
 #: forms.py:65
 msgid "Your resources are not initialized yet"
 msgstr "Ihre Ressourcen wurde noch nicht initialisiert"
+
 #: forms.py:69
 msgid "You're not allowed to define unlimited values"
 msgstr ""
-"Sie verfügen nicht über ausreichend Rechte, um unbegrenzte Werte anzugeben"
+"Sie verfügen nicht über die erforderlichen Rechte, um unbegrenzte Werte anzugeben"
+
 #: general_callbacks.py:29
 msgid "Reseller"
 msgstr "Reseller"
+
 #: general_callbacks.py:73
 msgid "Resources"
 msgstr "Ressourcen"
+
 #: lib.py:21
 #, python-format
 msgid "%s: limit reached"
 msgstr "%s: Grenze erreicht"
+
 #: lib.py:31
 msgid "Not enough resources"
 msgstr "Nicht ausreichend Ressourcen"
+
 #: models.py:18
 msgid "Maximum number of domain administrators this user can create"
 msgstr "Maximale Anzahl Domains, die ein Administrator erstellen darf"
+
 #: models.py:22
 msgid "Maximum number of domains this user can create"
-msgstr "Maximale Anzahl Domains, die dieser Anwender erstellen darf"
+msgstr "Maximale Anzahl Domains, die dieser Benutzer erstellen darf"
+
 #: models.py:26
 msgid "Maximum number of domain aliases this user can create"
-msgstr "Maximale Anzahl Domain Aliase, die dieser Anwender erstellen darf"
+msgstr "Maximale Anzahl Domain Aliase, die dieser Benutzer erstellen darf"
+
 #: models.py:29
 msgid "Maximum number of mailboxes this user can create"
-msgstr "Maximale Anzahl Mailboxen, die dieser Anwender erstellen darf"
+msgstr "Maximale Anzahl Mailboxen, die dieser Benutzer erstellen darf"
+
 #: models.py:31
 msgid "Maximum number of mailbox aliases this user can create"
-msgstr "Maximale Anzahl Mailbox-Aliase, die dieser Anwender erstellen darf"
+msgstr "Maximale Anzahl Mailbox-Aliase, die dieser Benutzer erstellen darf"
+
 #: models.py:151
 msgid "undefined"
 msgstr "unbestimmt"
+
 #: models.py:153
 msgid "unlimited"
 msgstr "unbegrenzt"
+
 #: modo_extension.py:26
 msgid ""
 "Per administrator resources to limit the number of objects they can create"
 msgstr ""
 "Administrator-Ressourcen, um die Anzahl erstellbarer Objekte einzuschränken"
+
 #: modo_extension.py:35
 msgid "Limits"
 msgstr "Grenzwerte"
+
 #: templates/modoboa_admin_limits/poolusage.html:3
 msgid "Resources usage"
 msgstr "Ressourcen-Verbrauch"
-#, fuzzy
-#, fuzzy
-#, fuzzy
-#, fuzzy
-#, fuzzy
