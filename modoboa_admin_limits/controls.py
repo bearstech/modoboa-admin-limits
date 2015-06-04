@@ -119,6 +119,21 @@ def can_create_new_object(user, objtype, count=1):
     check_limit(user, '%s_limit' % objtype, count)
 
 
+@events.observe("AccountImported")
+def create_pool_when_account_is_imported(user, account, row):
+    owner = get_object_owner(account)
+    if owner.group not in ['SuperAdmins', 'Resellers']:
+        return
+
+    if account.group == 'DomainAdmins':
+        check_limit(owner, 'domain_admins_limit')
+        inc_limit_usage(owner, 'domain_admins_limit')
+
+    if account.group in ['DomainAdmins', 'Resellers']:
+        p, created = LimitsPool.objects.get_or_create(user=account)
+        p.create_limits(owner)
+
+
 @events.observe("AccountCreated")
 def create_pool(user):
     owner = get_object_owner(user)
