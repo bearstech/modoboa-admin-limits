@@ -151,4 +151,7 @@ class Limit(models.Model):
             return _("undefined")
         if self.maxvalue == -1:
             return _("unlimited")
+        if self.maxvalue == 0:
+            return "100%"
+
         return "%d%%" % self.usage
